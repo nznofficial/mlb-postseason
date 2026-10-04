@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MLB Postseason</title>
+  <meta name="description" content="2026 MLB postseason calendar with game times, TV channels, scores and live games.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="ball" aria-hidden="true">⚾</span>
+      <h1>MLB Postseason <span id="season-year"></span></h1>
+    </div>
+    <nav class="tabs" role="tablist">
+      <a href="#calendar" class="tab" role="tab" data-tab="calendar">Calendar</a>
+      <a href="#live" class="tab" role="tab" data-tab="live">Live <span id="live-count" class="badge" hidden></span></a>
+    </nav>
+    <div class="meta">
+      <span id="last-updated" class="muted"></span>
+      <button id="refresh-btn" class="icon-btn" type="button" title="Refresh now" aria-label="Refresh now">↻</button>
+    </div>
+  </header>
+
+  <div id="error-banner" class="error-banner" hidden>
+    <span>Couldn't reach MLB's data service. Showing the last data loaded.</span>
+    <button type="button" id="retry-btn">Retry</button>
+  </div>
+
+  <main>
+    <section id="view-calendar" class="view" data-view="calendar">
+      <p class="tz-note muted">Times shown in <strong id="tz-name"></strong>.</p>
+      <div id="calendar" class="calendar"><p class="loading">Loading schedule…</p></div>
+    </section>
+    <section id="view-live" class="view" data-view="live" hidden>
+      <div id="live" class="live-grid"></div>
+    </section>
+  </main>
+
+  <dialog id="detail" class="detail">
+    <form method="dialog"><button class="close" aria-label="Close">×</button></form>
+    <div id="detail-body"></div>
+  </dialog>
+
+  <footer class="site-footer muted">
+    Data from the MLB Stats API. Not affiliated with Major League Baseball.
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

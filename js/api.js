@@ -31,6 +31,26 @@ export function fetchRecent() {
   return getJSON({ startDate: etDate(-1), endDate: etDate(0) });
 }
 
+/**
+ * Playoff seeds (1–6 per league) from final regular-season standings:
+ * division winners are seeded 1–3 by league rank, wild cards 4–6.
+ * Returns Map teamId → seed.
+ */
+export async function fetchSeeds(season) {
+  const url = `https://statsapi.mlb.com/api/v1/standings?leagueId=103,104&season=${season}&standingsTypes=regularSeason`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`MLB API ${res.status}`);
+  const { records = [] } = await res.json();
+  const seeds = new Map();
+  for (const leagueId of [103, 104]) {
+    const teams = records.filter((r) => r.league?.id === leagueId).flatMap((r) => r.teamRecords).filter((t) => t.clinched);
+    const divWinners = teams.filter((t) => t.divisionChamp).sort((a, b) => a.leagueRank - b.leagueRank);
+    const wildCards = teams.filter((t) => !t.divisionChamp && t.wildCardRank).sort((a, b) => a.wildCardRank - b.wildCardRank);
+    [...divWinners.slice(0, 3), ...wildCards.slice(0, 3)].forEach((t, i) => seeds.set(t.team.id, i + 1));
+  }
+  return seeds;
+}
+
 function normalizeTeam(side) {
   const t = side.team || {};
   const real = isRealTeam(t.id);
@@ -74,6 +94,7 @@ export function normalizeGame(g) {
     type: g.gameType,
     round: ROUNDS[g.gameType] || '',
     label: seriesLabel(g),
+    seriesId: `${g.gameType}_${g.teams.away.seriesNumber}`, // e.g. D_1; matches MLB's postseason series ids
     description: g.seriesStatus?.description || g.seriesDescription, // e.g. "NL Division Series"
     seriesDescription: g.seriesDescription,
     gameNumber: g.seriesGameNumber,

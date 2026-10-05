@@ -27,6 +27,7 @@
   <nav class="navbar">
     <div class="navbar-inner">
       <div class="tabs" role="tablist">
+        <a href="#bracket" class="tab" role="tab" data-tab="bracket">Bracket</a>
         <a href="#calendar" class="tab" role="tab" data-tab="calendar">Calendar</a>
         <a href="#live" class="tab" role="tab" data-tab="live">Live <span id="live-count" class="badge" hidden></span></a>
       </div>
@@ -47,7 +48,10 @@
   </div>
 
   <main>
-    <section id="view-calendar" class="view" data-view="calendar">
+    <section id="view-bracket" class="view" data-view="bracket">
+      <div id="bracket-root" class="bracket"><p class="loading">Loading bracket…</p></div>
+    </section>
+    <section id="view-calendar" class="view" data-view="calendar" hidden>
       <div id="calendar-root" class="calendar"><p class="loading">Loading schedule…</p></div>
     </section>
     <section id="view-live" class="view" data-view="live" hidden>

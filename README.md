@@ -2,6 +2,7 @@
 
 A static, no-build site that shows the MLB postseason:
 
+- **Bracket** (default): the full playoff bracket with seeds, series wins and the next game, with AL and NL converging on the World Series. Click a series to see all of its games. On phones the rounds are stacked.
 - **Calendar**: every postseason game, with local start times, TV channels, final scores and series status. On phones it switches to a day-by-day list.
 - **Live**: the games in progress, with score, inning, count, outs, runners on base, batter and pitcher. It refreshes every 30 seconds while games are live.
 - Click any game to open details: line score, winning and losing pitchers, probable starters, venue, English and Spanish TV channels, and a link to MLB Gameday.

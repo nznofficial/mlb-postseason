@@ -1,4 +1,4 @@
-import { esc, gameTime, teamLogo, inningLabel, roundClass } from './format.js';
+import { esc, gameTime, teamLogo, inningLabel, roundClass, tvLine } from './format.js';
 
 function bases(b) {
   const on = (x) => (x ? 'on' : '');
@@ -14,8 +14,8 @@ function outs(n) {
 }
 
 function liveRow(team) {
-  return `<div class="live-team" style="--team:${team.color}">
-    ${teamLogo(team, 32)}
+  return `<div class="live-team">
+    ${teamLogo(team, 36)}
     <span class="name">${esc(team.short)}</span>
     <span class="runs">${team.score ?? 0}</span>
   </div>`;
@@ -43,7 +43,7 @@ function liveCard(g) {
     </dl>`}
     <footer>
       ${g.series ? `<span>${esc(g.series)}</span>` : '<span></span>'}
-      ${g.tv.english.length ? `<span>📺 ${esc(g.tv.english.join(' · '))}</span>` : ''}
+      ${tvLine(g)}
     </footer>
   </article>`;
 }

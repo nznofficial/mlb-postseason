@@ -3,26 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MLB Postseason</title>
-  <meta name="description" content="2026 MLB postseason calendar with game times, TV channels, scores and live games.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚾</text></svg>">
+  <title>October Baseball</title>
+  <meta name="description" content="The MLB postseason calendar: game times, TV channels, final scores and live games.">
+  <meta name="theme-color" content="#0b0a10">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='32' r='28' fill='%23ff7a1a'/><path d='M18 12c6 8 6 32 0 40M46 12c-6 8-6 32 0 40' stroke='%230b0a10' stroke-width='3' fill='none' stroke-linecap='round'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Big+Shoulders+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <span class="ball" aria-hidden="true">⚾</span>
-      <h1>MLB Postseason <span id="season-year"></span></h1>
-    </div>
-    <nav class="tabs" role="tablist">
-      <a href="#calendar" class="tab" role="tab" data-tab="calendar">Calendar</a>
-      <a href="#live" class="tab" role="tab" data-tab="live">Live <span id="live-count" class="badge" hidden></span></a>
-    </nav>
-    <div class="meta">
-      <span id="last-updated" class="muted"></span>
-      <button id="refresh-btn" class="icon-btn" type="button" title="Refresh now" aria-label="Refresh now">↻</button>
+  <header class="hero">
+    <div class="moon" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="brand">
+        <p class="eyebrow"><span id="season-year"></span> Postseason</p>
+        <h1 class="wordmark"><span>October</span> <span class="ember">Baseball</span></h1>
+      </div>
+      <div id="hero-next" class="hero-next" aria-live="polite"></div>
     </div>
   </header>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <div class="tabs" role="tablist">
+        <a href="#calendar" class="tab" role="tab" data-tab="calendar">Calendar</a>
+        <a href="#live" class="tab" role="tab" data-tab="live">Live <span id="live-count" class="badge" hidden></span></a>
+      </div>
+      <div class="meta">
+        <span id="tz-name"></span>
+        <span class="sep" aria-hidden="true"></span>
+        <span id="last-updated"></span>
+        <button id="refresh-btn" class="icon-btn" type="button" title="Refresh now" aria-label="Refresh now">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
 
   <div id="error-banner" class="error-banner" hidden>
     <span>Couldn't reach MLB's data service. Showing the last data loaded.</span>
@@ -31,11 +48,10 @@
 
   <main>
     <section id="view-calendar" class="view" data-view="calendar">
-      <p class="tz-note muted">Times shown in <strong id="tz-name"></strong>.</p>
-      <div id="calendar" class="calendar"><p class="loading">Loading schedule…</p></div>
+      <div id="calendar-root" class="calendar"><p class="loading">Loading schedule…</p></div>
     </section>
     <section id="view-live" class="view" data-view="live" hidden>
-      <div id="live" class="live-grid"></div>
+      <div id="live-root" class="live-grid"></div>
     </section>
   </main>
 
@@ -44,7 +60,7 @@
     <div id="detail-body"></div>
   </dialog>
 
-  <footer class="site-footer muted">
+  <footer class="site-footer">
     Data from the MLB Stats API. Not affiliated with Major League Baseball.
   </footer>
 

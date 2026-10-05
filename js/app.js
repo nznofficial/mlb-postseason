@@ -3,13 +3,14 @@ import { renderCalendar, scrollToToday } from './calendar.js';
 import { renderLive } from './live.js';
 import { renderDetail } from './detail.js';
 import { tzAbbr } from './format.js';
+import { renderHero } from './hero.js';
 
 const POLL_MS = 30_000;
 const SOON_MS = 15 * 60_000; // start polling this long before first pitch
 
 const $ = (id) => document.getElementById(id);
 const els = {
-  calendar: $('calendar'), live: $('live'), liveCount: $('live-count'),
+  calendar: $('calendar-root'), live: $('live-root'), liveCount: $('live-count'),
   updated: $('last-updated'), error: $('error-banner'),
   detail: $('detail'), detailBody: $('detail-body'),
 };
@@ -20,7 +21,8 @@ let pollTimer = null;
 let openPk = null;
 
 $('season-year').textContent = season;
-$('tz-name').textContent = `${Intl.DateTimeFormat().resolvedOptions().timeZone.replace(/_/g, ' ')} (${tzAbbr()})`;
+$('tz-name').textContent = `Times in ${tzAbbr()}`;
+$('tz-name').title = Intl.DateTimeFormat().resolvedOptions().timeZone.replace(/_/g, ' ');
 
 // ---- tabs -------------------------------------------------------------
 function showTab() {
@@ -36,6 +38,7 @@ function render({ scroll = false } = {}) {
   const list = [...games.values()];
   renderCalendar(els.calendar, list);
   const liveN = renderLive(els.live, list);
+  renderHero($('hero-next'), list);
   els.liveCount.hidden = !liveN;
   els.liveCount.textContent = liveN;
   els.updated.textContent = `Updated ${new Date().toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}`;
@@ -93,7 +96,7 @@ document.addEventListener('click', (e) => {
   else if (e.target === els.detail) els.detail.close(); // backdrop click
 });
 document.addEventListener('keydown', (e) => {
-  const card = e.target.closest?.('.live-card[data-pk]');
+  const card = e.target.closest?.('[role="button"][data-pk]');
   if (card && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDetail(Number(card.dataset.pk)); }
 });
 els.detail.addEventListener('close', () => { openPk = null; });
@@ -103,4 +106,5 @@ const fullRefresh = () => load(() => fetchSchedule(season));
 $('refresh-btn').addEventListener('click', fullRefresh);
 $('retry-btn').addEventListener('click', fullRefresh);
 
-load(() => fetchSchedule(season), { scroll: true });
+document.body.classList.add('intro'); // entrance animations on first render only
+load(() => fetchSchedule(season), { scroll: true }).then(() => setTimeout(() => document.body.classList.remove('intro'), 1500));

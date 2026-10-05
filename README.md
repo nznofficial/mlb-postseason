@@ -1,4 +1,4 @@
-# MLB Postseason
+# October Baseball
 
 A static, no-build site that shows the MLB postseason:
 

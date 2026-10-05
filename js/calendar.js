@@ -1,7 +1,7 @@
-import { esc, gameTime, gameDayKey, localKey, teamLogo, inningLabel, statusBadge, roundClass } from './format.js';
+import { esc, gameTime, gameDayKey, localKey, teamLogo, inningLabel, statusBadge, roundClass, tvLine } from './format.js';
 
 const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const monthFmt = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' });
+const monthFmt = new Intl.DateTimeFormat(undefined, { month: 'long' });
 const dayFmt = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
 
 const parseKey = (key) => {
@@ -39,15 +39,13 @@ export function gameCard(game) {
   } else {
     foot = `<span class="time">${esc(gameTime(game))}</span>`;
   }
-  const tv = !game.isFinal && game.tv.english.length
-    ? `<div class="tv">📺 ${esc(game.tv.english.join(' · '))}</div>` : '';
+  const tv = game.isFinal ? '' : `<div class="game-tv">${tvLine(game)}</div>`;
 
-  return `<button type="button" class="game ${roundClass(game)} ${game.isLive ? 'is-live' : ''} ${game.ifNecessary && !game.isFinal ? 'if-nec' : ''}" data-pk="${game.pk}"
-            style="--away:${game.away.color};--home:${game.home.color}">
+  return `<button type="button" class="game ${roundClass(game)} ${game.isLive ? 'is-live' : ''} ${game.ifNecessary && !game.isFinal ? 'if-nec' : ''}" data-pk="${game.pk}">
     <div class="game-head">
-      <span class="round-tag">${esc(game.round)}</span>
-      <span class="gnum">G${game.gameNumber ?? ''}</span>
-      ${game.ifNecessary && !game.isFinal ? '<span class="ifnec">if nec.</span>' : ''}
+      <span class="round-tag">${esc(game.label)}</span>
+      <span class="gnum">Game ${game.gameNumber ?? ''}</span>
+      ${game.ifNecessary && !game.isFinal ? '<span class="ifnec">If nec.</span>' : ''}
       ${statusBadge(game)}
     </div>
     ${teamLine(game.away, game)}
@@ -78,7 +76,7 @@ function monthGrid(year, month, byDay, todayKey, rangeStart, rangeEnd) {
     weeks.push(cells.join(''));
   }
   return `<section class="month">
-    <h2>${monthFmt.format(first)}</h2>
+    <h2>${monthFmt.format(first)} <span class="year">${year}</span></h2>
     <div class="grid">
       ${WEEKDAYS.map((w) => `<div class="weekday">${w}</div>`).join('')}
       ${weeks.join('')}
@@ -90,7 +88,7 @@ function dayList(byDay, todayKey) {
   return `<div class="day-list">
     ${[...byDay.entries()].map(([key, games]) => `
       <section class="list-day ${key === todayKey ? 'today' : ''}" data-day="${key}">
-        <h3>${dayFmt.format(parseKey(key))}${key === todayKey ? ' <span class="today-tag">Today</span>' : ''}</h3>
+        <h3>${dayFmt.format(parseKey(key))}${key === todayKey ? ' <span class="today-tag">Tonight</span>' : ''}</h3>
         <div class="list-games">${games.map(gameCard).join('')}</div>
       </section>`).join('')}
   </div>`;

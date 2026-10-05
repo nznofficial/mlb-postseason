@@ -58,6 +58,14 @@ function normalizeBroadcasts(list = []) {
   return { english: tv.filter((b) => !b.spanish).map((b) => b.name), spanish: tv.filter((b) => b.spanish).map((b) => b.name) };
 }
 
+/** Short series label, e.g. "NLDS", "AL WC", "WS". */
+function seriesLabel(g) {
+  const league = /^(AL|NL)\b/.exec(g.seriesStatus?.description || '')?.[1] || '';
+  if (g.gameType === 'W') return 'WS';
+  if (g.gameType === 'F') return `${league} WC`.trim();
+  return `${league}${ROUNDS[g.gameType] || ''}`;
+}
+
 export function normalizeGame(g) {
   const ls = g.linescore || {};
   const state = g.status.abstractGameState; // Preview | Live | Final
@@ -65,6 +73,7 @@ export function normalizeGame(g) {
     pk: g.gamePk,
     type: g.gameType,
     round: ROUNDS[g.gameType] || '',
+    label: seriesLabel(g),
     description: g.seriesStatus?.description || g.seriesDescription, // e.g. "NL Division Series"
     seriesDescription: g.seriesDescription,
     gameNumber: g.seriesGameNumber,

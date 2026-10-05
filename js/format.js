@@ -1,4 +1,4 @@
-import { logoUrl, darkLogoUrl } from './teams.js';
+import { logoUrl } from './teams.js';
 
 export const esc = (s) =>
   String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -33,7 +33,12 @@ export function gameDayKey(game) {
 
 export function teamLogo(team, size = 20) {
   if (!team.real) return `<span class="logo logo-tbd" style="width:${size}px;height:${size}px" aria-hidden="true">?</span>`;
-  return `<picture class="logo"><source srcset="${darkLogoUrl(team.id)}" media="(prefers-color-scheme: dark)"><img src="${logoUrl(team.id)}" width="${size}" height="${size}" alt="" loading="lazy"></picture>`;
+  return `<img class="logo" src="${logoUrl(team.id)}" width="${size}" height="${size}" alt="" loading="lazy">`;
+}
+
+/** English TV channels with a TV icon, or nothing. */
+export function tvLine(game) {
+  return game.tv.english.length ? `<span class="tv">${esc(game.tv.english.join(' · '))}</span>` : '';
 }
 
 export function inningLabel(ls) {

@@ -33,5 +33,4 @@ export const TEAMS = {
 };
 
 export const isRealTeam = (id) => id in TEAMS;
-export const logoUrl = (id) => `https://www.mlbstatic.com/team-logos/team-cap-on-light/${id}.svg`;
-export const darkLogoUrl = (id) => `https://www.mlbstatic.com/team-logos/team-cap-on-dark/${id}.svg`;
+export const logoUrl = (id) => `https://www.mlbstatic.com/team-logos/team-cap-on-dark/${id}.svg`;

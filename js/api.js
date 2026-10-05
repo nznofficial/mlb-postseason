@@ -44,8 +44,9 @@ export async function fetchSeeds(season) {
   const seeds = new Map();
   for (const leagueId of [103, 104]) {
     const teams = records.filter((r) => r.league?.id === leagueId).flatMap((r) => r.teamRecords).filter((t) => t.clinched);
-    const divWinners = teams.filter((t) => t.divisionChamp).sort((a, b) => a.leagueRank - b.leagueRank);
-    const wildCards = teams.filter((t) => !t.divisionChamp && t.wildCardRank).sort((a, b) => a.wildCardRank - b.wildCardRank);
+    // Wild cards are the teams with a wildCardRank; `divisionChamp` can be wrong after a division tie.
+    const divWinners = teams.filter((t) => !t.wildCardRank).sort((a, b) => a.leagueRank - b.leagueRank);
+    const wildCards = teams.filter((t) => t.wildCardRank).sort((a, b) => a.wildCardRank - b.wildCardRank);
     [...divWinners.slice(0, 3), ...wildCards.slice(0, 3)].forEach((t, i) => seeds.set(t.team.id, i + 1));
   }
   return seeds;
